@@ -45,19 +45,8 @@ module.exports = function() {
             }
         }
 
-        irc.on('data', function(m) {
-            if (m.command !== 'PRIVMSG') { return; }
-
-            var message = m.trailing,
-                prefix = cfg.commands.prefix;
-
-            if (message.substr(0, prefix.length) === prefix) {
-                var command = message.split(' ')[0].substr(prefix.length);
-
-                if (command === 'btc') {
-                    get(m.params);
-                }
-            }
+        irc.on('command_btc', function(m) {
+            get(m.channel);
         });
     }
 }

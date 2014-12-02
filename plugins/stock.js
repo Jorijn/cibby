@@ -10,7 +10,7 @@ function checkPrice(price){
      if (sp["0"].indexOf('-') > -1) {
         return c.red(sp["0"]) + ' (' + c.red(sp["2"]) + ')';
     } else {
-        return c.blue(sp["0"]) + ' (' + c.blue(sp["2"]) + ')'; 
+        return c.blue(sp["0"]) + ' (' + c.blue(sp["2"]) + ')';
     }
   }
 
@@ -18,7 +18,7 @@ module.exports = function() {
     return function(irc) {
         var data, response;
         function get(target, prefix, bits) {
-            var ticker = bits["1"];
+            var ticker = bits[0];
               if (typeof ticker === 'undefined') {
                     irc.send(target, 'syntax: ' + prefix + 'stock goog');
                     return;
@@ -27,7 +27,7 @@ module.exports = function() {
             try {
                 http.get({host: 'query.yahooapis.com',
                           port: 80,
-                          path: '/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20("'+ticker+'")%0A%09%09&format=json&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env'}, 
+                          path: '/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20("'+ticker+'")%0A%09%09&format=json&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env'},
                         function(resp){
                     data = [], response = [];
                     resp.setEncoding('utf8');
@@ -59,21 +59,12 @@ module.exports = function() {
             }
         }
 
-       irc.on('data', function(m) {
-            if (m.command !== 'PRIVMSG') { return; }
+       var function_exec = function(m) {
+            get(m.channel, cfg.commands.prefix, m.params);
+       };
 
-            var message = m.trailing,
-                prefix = cfg.commands.prefix;
-
-            if (message.substr(0, prefix.length) === prefix) {
-                var command = message.split(' ')[0].substr(prefix.length);
-                var bits = message.split(' ');
-
-                if (command === 'stock' || command == 's') {
-                    get(m.params, prefix, bits);
-                }
-            }
-        });
+       irc.on('command_s', function_exec);
+       irc.on('command_stock', function_exec);
     }
 }
 

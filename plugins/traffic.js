@@ -110,21 +110,8 @@ module.exports = function() {
             }
         }
 
-        irc.on('data', function(m) {
-            if (m.command !== 'PRIVMSG') { return; }
-
-            var message = m.trailing,
-                prefix = cfg.commands.prefix;
-
-            if (message.substr(0, prefix.length) === prefix) {
-                var command = message.split(' ')[0].substr(prefix.length);
-                var bits = message.split(' ');
-                bits.shift();
-
-                if (command === 'fm') {
-                    fm(m.params, bits);
-                }
-            }
+        irc.on('command_fm', function(m) {
+            fm(m.channel, m.params);
         });
 
         fmInit();

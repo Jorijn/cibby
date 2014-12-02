@@ -1,6 +1,3 @@
-// DEAMONIZE
-require('daemon')();
-
 // CORE
 var util = require('util'),
     irc = require('slate-irc'),
@@ -8,7 +5,8 @@ var util = require('util'),
     cfg = require('./config');
 
 // BOT PLUGINS
-var autojoin = require('./plugins/autojoin.js'),
+var commands = require('./plugins/commands.js'),
+    autojoin = require('./plugins/autojoin.js'),
     ai = require('./plugins/ai.js');
     control = require('./plugins/control.js');
     traffic = require('./plugins/traffic.js');
@@ -29,6 +27,7 @@ client.nick(cfg.who.nickname);
 client.user(cfg.who.username, cfg.who.realname);
 
 // ADD PLUGINS
+client.use(commands());
 client.use(ai());
 client.use(autojoin());
 client.use(control());
