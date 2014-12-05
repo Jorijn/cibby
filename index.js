@@ -9,6 +9,7 @@ var commands = require('./plugins/commands.js'),
     autojoin = require('./plugins/autojoin.js'),
     ai = require('./plugins/ai.js');
     control = require('./plugins/control.js');
+    whatpulse = require('./plugins/whatpulse.js');
     traffic = require('./plugins/traffic.js');
     karma = require('./plugins/karma.js');
     bitcoin = require('./plugins/bitcoin.js');
@@ -32,6 +33,7 @@ client.use(ai());
 client.use(autojoin());
 client.use(control());
 client.use(traffic());
+client.use(whatpulse());
 client.use(karma());
 client.use(bitcoin());
 client.use(stock());
